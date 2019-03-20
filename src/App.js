@@ -17,7 +17,6 @@ class App extends Component {
   }
 
   deletePersonHandler = ( personIndex ) => {
-    // const persons = this.state.persons;
     const persons = [...this.state.persons];
     persons.splice(personIndex, 1);
 
@@ -65,7 +64,7 @@ class App extends Component {
     let personObj = null;
     let btnText = null;
     let btnStyle = {};
-    if (this.state.hidePersons === false) {
+    if (!this.state.hidePersons) {
       personObj = (
         <div>
           {
@@ -83,7 +82,6 @@ class App extends Component {
       btnText = ( 'Hide persons above.' );
       btnStyle = {};
     } else {
-      personObj = {};
       btnText = ( 'Show hidden persons.' );
       btnStyle = ( btnPadding );
     }
@@ -99,7 +97,7 @@ class App extends Component {
               return <Char
                 key={ index }
                 char={ char }
-                click={ this.charDeleteHandler.bind(this, index) } />;
+                click={ () => this.charDeleteHandler(index) } />;
             })
           }
         </div>
