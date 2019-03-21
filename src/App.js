@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Radium, { StyleRoot } from 'radium';
 import './App.css';
 import Person from './Person/Person';
 import TextValidator from './TextValidator/TextValidator'
@@ -12,7 +13,7 @@ class App extends Component {
       { id: 1, name: 'Ian', age: 30 },
       { id: 2, name: 'Joe', age: 25 }
     ],
-    hidePersons: false,
+    showPersons: false,
     inputText: '',
     textLength: 0
   }
@@ -38,9 +39,9 @@ class App extends Component {
   }
 
   togglePersonsHandler = () => {
-    const boo = this.state.hidePersons;
+    const boo = this.state.showPersons;
 
-    this.setState({ hidePersons: !boo });
+    this.setState({ showPersons: !boo });
   }
 
   inputChangedHandler = ( event ) => {
@@ -58,14 +59,22 @@ class App extends Component {
   }
 
   render() {
-    const btnPadding = {
-      marginTop: '16px'
+    const btnStyle = {
+      width: '20%',
+      padding: '8px',
+      marginTop: '16px',
+      backgroundColor: '#06f',
+      color: '#fff',
+      cursor: 'pointer',
+      ':hover': {
+        backgroundColor: '#9f3',
+        color: '#000'
+      }
     }
 
     let personObj = null;
     let btnText = null;
-    let btnStyle = {};
-    if (!this.state.hidePersons) {
+    if (this.state.showPersons) {
       personObj = (
         <div>
           {
@@ -80,11 +89,15 @@ class App extends Component {
           }
         </div>
       );
-      btnText = ( 'Hide persons above.' );
-      btnStyle = {};
+      btnStyle.backgroundColor = '#ff3';
+      btnStyle.color = '#000';
+      btnStyle[':hover'] = {
+        backgroundColor: '#f33',
+      }
+      btnText = ( 'Hide persons.' );
     } else {
+      personObj = null;
       btnText = ( 'Show hidden persons.' );
-      btnStyle = ( btnPadding );
     }
 
     let validatorObj = null;
@@ -100,21 +113,28 @@ class App extends Component {
       );
     }
 
+    const classes = [];
+    if (this.state.inputText.length < 5) { classes.push('red'); }
+    if (this.state.inputText.length < 3) { classes.push('bold'); }
+
     return (
+      <StyleRoot>
       <div className="App">
         <h1>&lt; React App &gt;</h1>
+        <p className={classes.join(' ')}>Input text</p>
         <input type="text" onChange={ (event) => this.inputChangedHandler(event) } value={this.state.inputText} />
         { validatorObj }
-        { personObj }
         <div>
           <button
             style={ btnStyle }
             onClick={ this.togglePersonsHandler }>{ btnText }</button>
         </div>
+        { personObj }
         <Footer />
       </div>
+      </StyleRoot>
     );
   }
 }
 
-export default App;
+export default Radium(App);
