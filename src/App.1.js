@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import Person from './Person/Person';
+import TextValidator from './TextValidator/TextValidator'
+import Char from './Char/Char';
 
 class App extends Component {
   state = {
@@ -9,13 +11,15 @@ class App extends Component {
       { id: 1, name: 'Ian', age: 30 },
       { id: 2, name: 'Joe', age: 25 }
     ],
-    hidePersons: false
+    hidePersons: false,
+    inputText: '',
+    textLength: 0
   }
 
   deletePersonHandler = ( personIndex ) => {
-    // const persons = this.state.persons;
     const persons = [...this.state.persons];
     persons.splice(personIndex, 1);
+
     this.setState({ persons: persons });
   }
 
@@ -34,7 +38,22 @@ class App extends Component {
 
   togglePersonsHandler = () => {
     const boo = this.state.hidePersons;
+
     this.setState({ hidePersons: !boo });
+  }
+
+  inputChangedHandler = ( event ) => {
+    const text = event.target.value;
+    const length = text.length;
+
+    this.setState({ inputText: text, textLength: length });
+  }
+
+  charDeleteHandler = ( index ) => {
+    const text = [...this.state.inputText];
+    text.splice(index, 1);
+
+    this.setState({ inputText: text.join(''), textLength: text.length });
   }
 
   render() {
@@ -45,17 +64,17 @@ class App extends Component {
     let personObj = null;
     let btnText = null;
     let btnStyle = {};
-    if (this.state.hidePersons === false) {
+    if (!this.state.hidePersons) {
       personObj = (
         <div>
           {
             this.state.persons.map((person, index) => {
               return <Person
-                key = { person.id }
-                name = { person.name }
-                age = { person.age }
-                click = { () => this.deletePersonHandler(index) }
-                changed = { (event) => this.nameChangedHandler(event, person.id) } />
+                key={ person.id }
+                name={ person.name }
+                age={ person.age }
+                click={ () => this.deletePersonHandler(index) }
+                changed={ (event) => this.nameChangedHandler(event, person.id) } />;
             })
           }
         </div>
@@ -63,19 +82,38 @@ class App extends Component {
       btnText = ( 'Hide persons above.' );
       btnStyle = {};
     } else {
-      personObj = {};
       btnText = ( 'Show hidden persons.' );
       btnStyle = ( btnPadding );
+    }
+
+    let validatorObj = null;
+    if (0 !== this.state.textLength) {
+      validatorObj = (
+        <div>
+          <TextValidator
+            length={ this.state.textLength } />
+          {
+            this.state.inputText.split('').map((char, index) => {
+              return <Char
+                key={ index }
+                char={ char }
+                click={ () => this.charDeleteHandler(index) } />;
+            })
+          }
+        </div>
+      );
     }
 
     return (
       <div className="App">
         <h1>&lt; React App &gt;</h1>
+        <input type="text" onChange={ (event) => this.inputChangedHandler(event) } value={this.state.inputText} />
+        { validatorObj }
         { personObj }
         <div>
           <button
-            style = { btnStyle }
-            onClick = { this.togglePersonsHandler }>{ btnText }</button>
+            style={ btnStyle }
+            onClick={ this.togglePersonsHandler }>{ btnText }</button>
         </div>
       </div>
     );

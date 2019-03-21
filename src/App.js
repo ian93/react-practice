@@ -3,6 +3,7 @@ import './App.css';
 import Person from './Person/Person';
 import TextValidator from './TextValidator/TextValidator'
 import Char from './Char/Char';
+import Footer from './Footer/Footer';
 
 class App extends Component {
   state = {
@@ -73,7 +74,7 @@ class App extends Component {
                 key={ person.id }
                 name={ person.name }
                 age={ person.age }
-                click={ () => this.deletePersonHandler(index) }
+                click={ this.deletePersonHandler.bind(this, index) }
                 changed={ (event) => this.nameChangedHandler(event, person.id) } />;
             })
           }
@@ -92,14 +93,9 @@ class App extends Component {
         <div>
           <TextValidator
             length={ this.state.textLength } />
-          {
-            this.state.inputText.split('').map((char, index) => {
-              return <Char
-                key={ index }
-                char={ char }
-                click={ () => this.charDeleteHandler(index) } />;
-            })
-          }
+          <Char
+            text={ this.state.inputText }
+            click={ this.charDeleteHandler } />
         </div>
       );
     }
@@ -115,6 +111,7 @@ class App extends Component {
             style={ btnStyle }
             onClick={ this.togglePersonsHandler }>{ btnText }</button>
         </div>
+        <Footer />
       </div>
     );
   }
