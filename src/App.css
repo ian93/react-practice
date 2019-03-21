@@ -9,3 +9,12 @@
 .bold {
   font-weight: bold;
 }
+
+.App button {
+  width: 20%;
+  padding: 8px;
+  margin-top: 16px;
+  background-color: #08f;
+  color: #fff;
+  cursor: pointer;
+}

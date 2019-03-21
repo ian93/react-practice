@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Radium, { StyleRoot } from 'radium';
-import './App.css';
+import classes from './App.css';
 import Person from './Person/Person';
 import TextValidator from './TextValidator/TextValidator'
 import Char from './Char/Char';
@@ -59,19 +58,6 @@ class App extends Component {
   }
 
   render() {
-    const btnStyle = {
-      width: '20%',
-      padding: '8px',
-      marginTop: '16px',
-      backgroundColor: '#06f',
-      color: '#fff',
-      cursor: 'pointer',
-      ':hover': {
-        backgroundColor: '#9f3',
-        color: '#000'
-      }
-    }
-
     let personObj = null;
     let btnText = null;
     if (this.state.showPersons) {
@@ -89,11 +75,6 @@ class App extends Component {
           }
         </div>
       );
-      btnStyle.backgroundColor = '#ff3';
-      btnStyle.color = '#000';
-      btnStyle[':hover'] = {
-        backgroundColor: '#f33',
-      }
       btnText = ( 'Hide persons.' );
     } else {
       personObj = null;
@@ -113,28 +94,25 @@ class App extends Component {
       );
     }
 
-    const classes = [];
-    if (this.state.inputText.length < 5) { classes.push('red'); }
-    if (this.state.inputText.length < 3) { classes.push('bold'); }
+    const assignedClasses = [];
+    if (this.state.inputText.length < 5) { assignedClasses.push(classes.red); }
+    if (this.state.inputText.length < 3) { assignedClasses.push(classes.bold); }
 
     return (
-      <StyleRoot>
-      <div className="App">
+      <div className={ classes.App }>
         <h1>&lt; React App &gt;</h1>
-        <p className={classes.join(' ')}>Input text</p>
-        <input type="text" onChange={ (event) => this.inputChangedHandler(event) } value={this.state.inputText} />
+        <p className={ assignedClasses.join(' ') }>Input text</p>
+        <input type="text" onChange={ (event) => this.inputChangedHandler(event) } value={ this.state.inputText } />
         { validatorObj }
         <div>
           <button
-            style={ btnStyle }
             onClick={ this.togglePersonsHandler }>{ btnText }</button>
         </div>
         { personObj }
         <Footer />
       </div>
-      </StyleRoot>
     );
   }
 }
 
-export default Radium(App);
+export default App;

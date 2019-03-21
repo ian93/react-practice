@@ -10,7 +10,11 @@ const char = ( props ) => {
     }
     return (props.text.split('').map(
         (char, index) => {
-            return <div className="Char" onClick={ props.click.bind(this, index) } style={ style }>{ char }</div>
+            return <div
+                className="Char"
+                key={ index }
+                onClick={ props.click.bind(this, index) }
+                style={ style }>{ char }</div>
     }));
 }
 
