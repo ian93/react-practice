@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import './App.css';
-import Person from './Person/Person';
-import TextValidator from './TextValidator/TextValidator'
-import Char from './Char/Char';
+import classes from './App.css';
+import Persons from '../components/Persons/Persons';
+
+import TextValidator from '../components/TextValidator/TextValidator'
+import Char from '../components/Char/Char';
+import Footer from '../components/Footer/Footer';
 
 class App extends Component {
   state = {
@@ -11,7 +13,7 @@ class App extends Component {
       { id: 1, name: 'Ian', age: 30 },
       { id: 2, name: 'Joe', age: 25 }
     ],
-    hidePersons: false,
+    showPersons: false,
     inputText: '',
     textLength: 0
   }
@@ -37,9 +39,9 @@ class App extends Component {
   }
 
   togglePersonsHandler = () => {
-    const boo = this.state.hidePersons;
+    const boo = this.state.showPersons;
 
-    this.setState({ hidePersons: !boo });
+    this.setState({ showPersons: !boo });
   }
 
   inputChangedHandler = ( event ) => {
@@ -57,33 +59,23 @@ class App extends Component {
   }
 
   render() {
-    const btnPadding = {
-      marginTop: '16px'
-    }
-
     let personObj = null;
+    let btnClass = null;
     let btnText = null;
-    let btnStyle = {};
-    if (!this.state.hidePersons) {
+    if (this.state.showPersons) {
       personObj = (
         <div>
-          {
-            this.state.persons.map((person, index) => {
-              return <Person
-                key={ person.id }
-                name={ person.name }
-                age={ person.age }
-                click={ () => this.deletePersonHandler(index) }
-                changed={ (event) => this.nameChangedHandler(event, person.id) } />;
-            })
-          }
+          <Persons
+            persons={ this.state.persons }
+            clicked={ this.deletePersonHandler }
+            changed={ this.nameChangedHandler } />
         </div>
       );
-      btnText = ( 'Hide persons above.' );
-      btnStyle = {};
+      btnText = ( 'Hide persons.' );
     } else {
+      personObj = null;
       btnText = ( 'Show hidden persons.' );
-      btnStyle = ( btnPadding );
+      btnClass = classes.Red;
     }
 
     let validatorObj = null;
@@ -92,29 +84,30 @@ class App extends Component {
         <div>
           <TextValidator
             length={ this.state.textLength } />
-          {
-            this.state.inputText.split('').map((char, index) => {
-              return <Char
-                key={ index }
-                char={ char }
-                click={ () => this.charDeleteHandler(index) } />;
-            })
-          }
+          <Char
+            text={ this.state.inputText }
+            click={ this.charDeleteHandler } />
         </div>
       );
     }
 
+    const assignedClasses = [];
+    if (this.state.inputText.length < 5) { assignedClasses.push(classes.red); }
+    if (this.state.inputText.length < 3) { assignedClasses.push(classes.bold); }
+
     return (
-      <div className="App">
+      <div className={ classes.App }>
         <h1>&lt; React App &gt;</h1>
-        <input type="text" onChange={ (event) => this.inputChangedHandler(event) } value={this.state.inputText} />
+        <p className={ assignedClasses.join(' ') }>Input text</p>
+        <input type="text" onChange={ (event) => this.inputChangedHandler(event) } value={ this.state.inputText } />
         { validatorObj }
-        { personObj }
         <div>
           <button
-            style={ btnStyle }
+            className={ btnClass }
             onClick={ this.togglePersonsHandler }>{ btnText }</button>
         </div>
+        { personObj }
+        <Footer />
       </div>
     );
   }
