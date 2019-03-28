@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import classes from './App.css';
 import Person from './Person/Person';
 import TextValidator from './TextValidator/TextValidator'
 import Char from './Char/Char';
@@ -12,7 +12,7 @@ class App extends Component {
       { id: 1, name: 'Ian', age: 30 },
       { id: 2, name: 'Joe', age: 25 }
     ],
-    hidePersons: false,
+    showPersons: false,
     inputText: '',
     textLength: 0
   }
@@ -38,9 +38,9 @@ class App extends Component {
   }
 
   togglePersonsHandler = () => {
-    const boo = this.state.hidePersons;
+    const boo = this.state.showPersons;
 
-    this.setState({ hidePersons: !boo });
+    this.setState({ showPersons: !boo });
   }
 
   inputChangedHandler = ( event ) => {
@@ -58,14 +58,10 @@ class App extends Component {
   }
 
   render() {
-    const btnPadding = {
-      marginTop: '16px'
-    }
-
     let personObj = null;
+    let btnClass = null;
     let btnText = null;
-    let btnStyle = {};
-    if (!this.state.hidePersons) {
+    if (this.state.showPersons) {
       personObj = (
         <div>
           {
@@ -80,11 +76,11 @@ class App extends Component {
           }
         </div>
       );
-      btnText = ( 'Hide persons above.' );
-      btnStyle = {};
+      btnText = ( 'Hide persons.' );
     } else {
+      personObj = null;
       btnText = ( 'Show hidden persons.' );
-      btnStyle = ( btnPadding );
+      btnClass = classes.Red;
     }
 
     let validatorObj = null;
@@ -100,17 +96,22 @@ class App extends Component {
       );
     }
 
+    const assignedClasses = [];
+    if (this.state.inputText.length < 5) { assignedClasses.push(classes.red); }
+    if (this.state.inputText.length < 3) { assignedClasses.push(classes.bold); }
+
     return (
-      <div className="App">
+      <div className={ classes.App }>
         <h1>&lt; React App &gt;</h1>
-        <input type="text" onChange={ (event) => this.inputChangedHandler(event) } value={this.state.inputText} />
+        <p className={ assignedClasses.join(' ') }>Input text</p>
+        <input type="text" onChange={ (event) => this.inputChangedHandler(event) } value={ this.state.inputText } />
         { validatorObj }
-        { personObj }
         <div>
           <button
-            style={ btnStyle }
+            className={ btnClass }
             onClick={ this.togglePersonsHandler }>{ btnText }</button>
         </div>
+        { personObj }
         <Footer />
       </div>
     );
