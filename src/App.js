@@ -59,6 +59,7 @@ class App extends Component {
 
   render() {
     let personObj = null;
+    let btnClass = null;
     let btnText = null;
     if (this.state.showPersons) {
       personObj = (
@@ -79,6 +80,7 @@ class App extends Component {
     } else {
       personObj = null;
       btnText = ( 'Show hidden persons.' );
+      btnClass = classes.Red;
     }
 
     let validatorObj = null;
@@ -106,6 +108,7 @@ class App extends Component {
         { validatorObj }
         <div>
           <button
+            className={ btnClass }
             onClick={ this.togglePersonsHandler }>{ btnText }</button>
         </div>
         { personObj }
