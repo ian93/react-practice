@@ -5,6 +5,8 @@ import TextValidator from './TextValidator/TextValidator'
 import Char from './Char/Char';
 import Footer from './Footer/Footer';
 
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
+
 class App extends Component {
   state = {
     persons: [
@@ -66,12 +68,13 @@ class App extends Component {
         <div>
           {
             this.state.persons.map((person, index) => {
-              return <Person
-                key={ person.id }
-                name={ person.name }
-                age={ person.age }
-                click={ this.deletePersonHandler.bind(this, index) }
-                changed={ (event) => this.nameChangedHandler(event, person.id) } />;
+              return <ErrorBoundary key={ person.id }>
+                <Person
+                  name={ person.name }
+                  age={ person.age }
+                  click={ this.deletePersonHandler.bind(this, index) }
+                  changed={ (event) => this.nameChangedHandler(event, person.id) } />
+              </ErrorBoundary>;
             })
           }
         </div>

@@ -3,6 +3,11 @@ import React from 'react';
 import classes from './Person.css';
 
 const person = ( props ) => {
+    const prob = Math.random();
+    if (prob > 0.9) {
+        throw new Error('Something wrong.');
+    }
+
     return (
         <div className={ classes.Person }>
             <p onClick={ props.click }>I'm { props.name }, and I'm { props.age } years old!</p>
