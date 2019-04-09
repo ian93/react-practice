@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import classes from './App.css';
+
+import classes from './App.css'
+import Cockpit from '../components/Cockpit/Cockpit';
 import Persons from '../components/Persons/Persons';
 
-import TextValidator from '../components/TextValidator/TextValidator'
-import Char from '../components/Char/Char';
 import Footer from '../components/Footer/Footer';
 
 class App extends Component {
@@ -14,8 +14,7 @@ class App extends Component {
       { id: 2, name: 'Joe', age: 25 }
     ],
     showPersons: false,
-    inputText: '',
-    textLength: 0
+    inputText: ''
   }
 
   deletePersonHandler = ( personIndex ) => {
@@ -46,67 +45,35 @@ class App extends Component {
 
   inputChangedHandler = ( event ) => {
     const text = event.target.value;
-    const length = text.length;
 
-    this.setState({ inputText: text, textLength: length });
+    this.setState({ inputText: text });
   }
 
   charDeleteHandler = ( index ) => {
     const text = [...this.state.inputText];
     text.splice(index, 1);
 
-    this.setState({ inputText: text.join(''), textLength: text.length });
+    this.setState({ inputText: text.join('') });
   }
 
   render() {
-    let personObj = null;
-    let btnClass = null;
-    let btnText = null;
+    let persons = null;
     if (this.state.showPersons) {
-      personObj = (
-        <div>
-          <Persons
-            persons={ this.state.persons }
-            clicked={ this.deletePersonHandler }
-            changed={ this.nameChangedHandler } />
-        </div>
-      );
-      btnText = ( 'Hide persons.' );
-    } else {
-      personObj = null;
-      btnText = ( 'Show hidden persons.' );
-      btnClass = classes.Red;
+      persons = <Persons
+          persons={ this.state.persons }
+          clicked={ this.deletePersonHandler }
+          changed={ this.nameChangedHandler } />;
     }
-
-    let validatorObj = null;
-    if (0 !== this.state.textLength) {
-      validatorObj = (
-        <div>
-          <TextValidator
-            length={ this.state.textLength } />
-          <Char
-            text={ this.state.inputText }
-            click={ this.charDeleteHandler } />
-        </div>
-      );
-    }
-
-    const assignedClasses = [];
-    if (this.state.inputText.length < 5) { assignedClasses.push(classes.red); }
-    if (this.state.inputText.length < 3) { assignedClasses.push(classes.bold); }
 
     return (
       <div className={ classes.App }>
-        <h1>&lt; React App &gt;</h1>
-        <p className={ assignedClasses.join(' ') }>Input text</p>
-        <input type="text" onChange={ (event) => this.inputChangedHandler(event) } value={ this.state.inputText } />
-        { validatorObj }
-        <div>
-          <button
-            className={ btnClass }
-            onClick={ this.togglePersonsHandler }>{ btnText }</button>
-        </div>
-        { personObj }
+        <Cockpit
+          showPersons={ this.state.showPersons }
+          input={ this.state.inputText }
+          texted={ this.inputChangedHandler }
+          delete={ this.charDeleteHandler }
+          clicked={ this.togglePersonsHandler } />
+        { persons }
         <Footer />
       </div>
     );
