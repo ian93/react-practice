@@ -12,6 +12,17 @@ class App extends Component {
     console.log('[App.js] constructor');
   }
 
+  state = {
+    persons: [
+      { id: 0, name: 'Max', age: 29 },
+      { id: 1, name: 'Ian', age: 30 },
+      { id: 2, name: 'Joe', age: 25 }
+    ],
+    showPersons: false,
+    showCockpit: true,
+    inputText: '',
+  }
+
   static getDerivedStateFromProps(props, state) {
     console.log('[App.js] getDerivedStateFromProps', props);
     return state;
@@ -20,7 +31,7 @@ class App extends Component {
   componentDidMount() {
     console.log('[App.js] componentDidMount');
   }
-  
+
   shouldComponentUpdate(nextProps, nextState) {
     console.log('[App.js] shouldComponentUpdate');
     return true;
@@ -30,25 +41,14 @@ class App extends Component {
     console.log('[App.js] componentDidUpdate');
   }
 
-  state = {
-    persons: [
-      { id: 0, name: 'Max', age: 29 },
-      { id: 1, name: 'Ian', age: 30 },
-      { id: 2, name: 'Joe', age: 25 }
-    ],
-    showPersons: false,
-    showCockpit: true,
-    inputText: ''
-  }
-
-  deletePersonHandler = ( personIndex ) => {
+  deletePersonHandler = (personIndex) => {
     const persons = [...this.state.persons];
     persons.splice(personIndex, 1);
 
     this.setState({ persons: persons });
   }
 
-  nameChangedHandler = ( event, personId ) => {
+  nameChangedHandler = (event, personId) => {
     const personIndex = this.state.persons.findIndex(person => {
       return person.id === personId;
     });
@@ -67,13 +67,13 @@ class App extends Component {
     this.setState({ showPersons: !boo });
   }
 
-  inputChangedHandler = ( event ) => {
+  inputChangedHandler = (event) => {
     const text = event.target.value;
 
     this.setState({ inputText: text });
   }
 
-  charDeleteHandler = ( index ) => {
+  charDeleteHandler = (index) => {
     const text = [...this.state.inputText];
     text.splice(index, 1);
 
@@ -90,22 +90,23 @@ class App extends Component {
           clicked={ this.deletePersonHandler }
           changed={ this.nameChangedHandler } />;
     }
-    // let cockpit = null;
-    // if (this.state.showCockpit) {
-    //   cockpit = <Cockpit
-    //       showCockpit={ this.state.showCockpit }
-    //       title={ this.props.appTitle }
-    //       showPersons={ this.state.showPersons }
-    //       input={ this.state.inputText }
-    //       texted={ this.inputChangedHandler }
-    //       delete={ this.charDeleteHandler }
-    //       clicked={ this.togglePersonsHandler } />
-    // }
+    let cockpit = null;
+    if (this.state.showCockpit) {
+      cockpit = <Cockpit
+          showCockpit={ this.state.showCockpit }
+          title={ this.props.appTitle }
+          showPersons={ this.state.showPersons }
+          input={ this.state.inputText }
+          texted={ this.inputChangedHandler }
+          delete={ this.charDeleteHandler }
+          clicked={ this.togglePersonsHandler } />
+    }
 
     return (
       <div className={ classes.App }>
         <button onClick={() => { this.setState({ showCockpit: false }) }}>Remove Cockpit</button>
-        {
+        { cockpit }
+        {/* {
           this.state.showCockpit ?
           <Cockpit
             showCockpit={ this.state.showCockpit }
@@ -116,7 +117,7 @@ class App extends Component {
             delete={ this.charDeleteHandler }
             clicked={ this.togglePersonsHandler } />
           : null
-        }
+        } */}
         { persons }
         <Footer />
       </div>
